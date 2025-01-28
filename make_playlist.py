@@ -3,275 +3,23 @@
 import os
 import re
 
-EPG_LIST = ( "https://iptv-org.github.io/epg/guides/af.xml",
-             "https://iptv-org.github.io/epg/guides/al.xml",
-             "https://iptv-org.github.io/epg/guides/dz.xml",
-             "https://iptv-org.github.io/epg/guides/as.xml",
-             "https://iptv-org.github.io/epg/guides/ad.xml",
-             "https://iptv-org.github.io/epg/guides/ao.xml",
-             "https://iptv-org.github.io/epg/guides/ai.xml",
-             "https://iptv-org.github.io/epg/guides/aq.xml",
-             "https://iptv-org.github.io/epg/guides/ag.xml",
-             "https://iptv-org.github.io/epg/guides/ar.xml",
-             "https://iptv-org.github.io/epg/guides/am.xml",
-             "https://iptv-org.github.io/epg/guides/aw.xml",
-             "https://iptv-org.github.io/epg/guides/au.xml",
-             "https://iptv-org.github.io/epg/guides/at.xml",
-             "https://iptv-org.github.io/epg/guides/az.xml",
-             "https://iptv-org.github.io/epg/guides/bs.xml",
-             "https://iptv-org.github.io/epg/guides/bh.xml",
-             "https://iptv-org.github.io/epg/guides/bd.xml",
-             "https://iptv-org.github.io/epg/guides/bb.xml",
-             "https://iptv-org.github.io/epg/guides/by.xml",
-             "https://iptv-org.github.io/epg/guides/be.xml",
-             "https://iptv-org.github.io/epg/guides/bz.xml",
-             "https://iptv-org.github.io/epg/guides/bj.xml",
-             "https://iptv-org.github.io/epg/guides/bm.xml",
-             "https://iptv-org.github.io/epg/guides/bt.xml",
-             "https://iptv-org.github.io/epg/guides/bo.xml",
-             "https://iptv-org.github.io/epg/guides/bq.xml",
-             "https://iptv-org.github.io/epg/guides/ba.xml",
-             "https://iptv-org.github.io/epg/guides/bw.xml",
-             "https://iptv-org.github.io/epg/guides/bv.xml",
-             "https://iptv-org.github.io/epg/guides/br.xml",
-             "https://iptv-org.github.io/epg/guides/io.xml",
-             "https://iptv-org.github.io/epg/guides/vg.xml",
-             "https://iptv-org.github.io/epg/guides/bn.xml",
-             "https://iptv-org.github.io/epg/guides/bg.xml",
-             "https://iptv-org.github.io/epg/guides/bf.xml",
-             "https://iptv-org.github.io/epg/guides/bi.xml",
-             "https://iptv-org.github.io/epg/guides/kh.xml",
-             "https://iptv-org.github.io/epg/guides/cm.xml",
-             "https://iptv-org.github.io/epg/guides/ca.xml",
-             "https://iptv-org.github.io/epg/guides/cv.xml",
-             "https://iptv-org.github.io/epg/guides/ky.xml",
-             "https://iptv-org.github.io/epg/guides/cf.xml",
-             "https://iptv-org.github.io/epg/guides/td.xml",
-             "https://iptv-org.github.io/epg/guides/cl.xml",
-             "https://iptv-org.github.io/epg/guides/cn.xml",
-             "https://iptv-org.github.io/epg/guides/cx.xml",
-             "https://iptv-org.github.io/epg/guides/cc.xml",
-             "https://iptv-org.github.io/epg/guides/co.xml",
-             "https://iptv-org.github.io/epg/guides/km.xml",
-             "https://iptv-org.github.io/epg/guides/ck.xml",
-             "https://iptv-org.github.io/epg/guides/cr.xml",
-             "https://iptv-org.github.io/epg/guides/hr.xml",
-             "https://iptv-org.github.io/epg/guides/cu.xml",
-             "https://iptv-org.github.io/epg/guides/cw.xml",
-             "https://iptv-org.github.io/epg/guides/cy.xml",
-             "https://iptv-org.github.io/epg/guides/cz.xml",
-             "https://iptv-org.github.io/epg/guides/cd.xml",
-             "https://iptv-org.github.io/epg/guides/dk.xml",
-             "https://iptv-org.github.io/epg/guides/dj.xml",
-             "https://iptv-org.github.io/epg/guides/dm.xml",
-             "https://iptv-org.github.io/epg/guides/do.xml",
-             "https://iptv-org.github.io/epg/guides/tl.xml",
-             "https://iptv-org.github.io/epg/guides/ec.xml",
-             "https://iptv-org.github.io/epg/guides/eg.xml",
-             "https://iptv-org.github.io/epg/guides/sv.xml",
-             "https://iptv-org.github.io/epg/guides/gq.xml",
-             "https://iptv-org.github.io/epg/guides/er.xml",
-             "https://iptv-org.github.io/epg/guides/ee.xml",
-             "https://iptv-org.github.io/epg/guides/et.xml",
-             "https://iptv-org.github.io/epg/guides/fk.xml",
-             "https://iptv-org.github.io/epg/guides/fo.xml",
-             "https://iptv-org.github.io/epg/guides/fj.xml",
-             "https://iptv-org.github.io/epg/guides/fi.xml",
-             "https://iptv-org.github.io/epg/guides/fr.xml",
-             "https://iptv-org.github.io/epg/guides/gf.xml",
-             "https://iptv-org.github.io/epg/guides/pf.xml",
-             "https://iptv-org.github.io/epg/guides/tf.xml",
-             "https://iptv-org.github.io/epg/guides/ga.xml",
-             "https://iptv-org.github.io/epg/guides/gm.xml",
-             "https://iptv-org.github.io/epg/guides/ge.xml",
-             "https://iptv-org.github.io/epg/guides/de.xml",
-             "https://iptv-org.github.io/epg/guides/gh.xml",
-             "https://iptv-org.github.io/epg/guides/gi.xml",
-             "https://iptv-org.github.io/epg/guides/gr.xml",
-             "https://iptv-org.github.io/epg/guides/gl.xml",
-             "https://iptv-org.github.io/epg/guides/gd.xml",
-             "https://iptv-org.github.io/epg/guides/gp.xml",
-             "https://iptv-org.github.io/epg/guides/gu.xml",
-             "https://iptv-org.github.io/epg/guides/gt.xml",
-             "https://iptv-org.github.io/epg/guides/gg.xml",
-             "https://iptv-org.github.io/epg/guides/gn.xml",
-             "https://iptv-org.github.io/epg/guides/gw.xml",
-             "https://iptv-org.github.io/epg/guides/gy.xml",
-             "https://iptv-org.github.io/epg/guides/ht.xml",
-             "https://iptv-org.github.io/epg/guides/hm.xml",
-             "https://iptv-org.github.io/epg/guides/hn.xml",
-             "https://iptv-org.github.io/epg/guides/hk.xml",
-             "https://iptv-org.github.io/epg/guides/hu.xml",
-             "https://iptv-org.github.io/epg/guides/is.xml",
-             "https://iptv-org.github.io/epg/guides/in.xml",
-             "https://iptv-org.github.io/epg/guides/id.xml",
-             "https://iptv-org.github.io/epg/guides/ir.xml",
-             "https://iptv-org.github.io/epg/guides/iq.xml",
-             "https://iptv-org.github.io/epg/guides/ie.xml",
-             "https://iptv-org.github.io/epg/guides/im.xml",
-             "https://iptv-org.github.io/epg/guides/il.xml",
-             "https://iptv-org.github.io/epg/guides/it.xml",
-             "https://iptv-org.github.io/epg/guides/ci.xml",
-             "https://iptv-org.github.io/epg/guides/jm.xml",
-             "https://iptv-org.github.io/epg/guides/jp.xml",
-             "https://iptv-org.github.io/epg/guides/je.xml",
-             "https://iptv-org.github.io/epg/guides/jo.xml",
-             "https://iptv-org.github.io/epg/guides/kz.xml",
-             "https://iptv-org.github.io/epg/guides/ke.xml",
-             "https://iptv-org.github.io/epg/guides/ki.xml",
-             "https://iptv-org.github.io/epg/guides/xk.xml",
-             "https://iptv-org.github.io/epg/guides/kw.xml",
-             "https://iptv-org.github.io/epg/guides/kg.xml",
-             "https://iptv-org.github.io/epg/guides/la.xml",
-             "https://iptv-org.github.io/epg/guides/lv.xml",
-             "https://iptv-org.github.io/epg/guides/lb.xml",
-             "https://iptv-org.github.io/epg/guides/ls.xml",
-             "https://iptv-org.github.io/epg/guides/lr.xml",
-             "https://iptv-org.github.io/epg/guides/ly.xml",
-             "https://iptv-org.github.io/epg/guides/li.xml",
-             "https://iptv-org.github.io/epg/guides/lt.xml",
-             "https://iptv-org.github.io/epg/guides/lu.xml",
-             "https://iptv-org.github.io/epg/guides/mo.xml",
-             "https://iptv-org.github.io/epg/guides/mg.xml",
-             "https://iptv-org.github.io/epg/guides/mw.xml",
-             "https://iptv-org.github.io/epg/guides/my.xml",
-             "https://iptv-org.github.io/epg/guides/mv.xml",
-             "https://iptv-org.github.io/epg/guides/ml.xml",
-             "https://iptv-org.github.io/epg/guides/mt.xml",
-             "https://iptv-org.github.io/epg/guides/mh.xml",
-             "https://iptv-org.github.io/epg/guides/mq.xml",
-             "https://iptv-org.github.io/epg/guides/mr.xml",
-             "https://iptv-org.github.io/epg/guides/mu.xml",
-             "https://iptv-org.github.io/epg/guides/yt.xml",
-             "https://iptv-org.github.io/epg/guides/mx.xml",
-             "https://iptv-org.github.io/epg/guides/fm.xml",
-             "https://iptv-org.github.io/epg/guides/md.xml",
-             "https://iptv-org.github.io/epg/guides/mc.xml",
-             "https://iptv-org.github.io/epg/guides/mn.xml",
-             "https://iptv-org.github.io/epg/guides/me.xml",
-             "https://iptv-org.github.io/epg/guides/ms.xml",
-             "https://iptv-org.github.io/epg/guides/ma.xml",
-             "https://iptv-org.github.io/epg/guides/mz.xml",
-             "https://iptv-org.github.io/epg/guides/mm.xml",
-             "https://iptv-org.github.io/epg/guides/na.xml",
-             "https://iptv-org.github.io/epg/guides/nr.xml",
-             "https://iptv-org.github.io/epg/guides/np.xml",
-             "https://iptv-org.github.io/epg/guides/nl.xml",
-             "https://iptv-org.github.io/epg/guides/nc.xml",
-             "https://iptv-org.github.io/epg/guides/nz.xml",
-             "https://iptv-org.github.io/epg/guides/ni.xml",
-             "https://iptv-org.github.io/epg/guides/ne.xml",
-             "https://iptv-org.github.io/epg/guides/ng.xml",
-             "https://iptv-org.github.io/epg/guides/nu.xml",
-             "https://iptv-org.github.io/epg/guides/nf.xml",
-             "https://iptv-org.github.io/epg/guides/kp.xml",
-             "https://iptv-org.github.io/epg/guides/mk.xml",
-             "https://iptv-org.github.io/epg/guides/mp.xml",
-             "https://iptv-org.github.io/epg/guides/no.xml",
-             "https://iptv-org.github.io/epg/guides/om.xml",
-             "https://iptv-org.github.io/epg/guides/pk.xml",
-             "https://iptv-org.github.io/epg/guides/pw.xml",
-             "https://iptv-org.github.io/epg/guides/ps.xml",
-             "https://iptv-org.github.io/epg/guides/pa.xml",
-             "https://iptv-org.github.io/epg/guides/pg.xml",
-             "https://iptv-org.github.io/epg/guides/py.xml",
-             "https://iptv-org.github.io/epg/guides/pe.xml",
-             "https://iptv-org.github.io/epg/guides/ph.xml",
-             "https://iptv-org.github.io/epg/guides/pn.xml",
-             "https://iptv-org.github.io/epg/guides/pl.xml",
-             "https://iptv-org.github.io/epg/guides/pt.xml",
-             "https://iptv-org.github.io/epg/guides/pr.xml",
-             "https://iptv-org.github.io/epg/guides/qa.xml",
-             "https://iptv-org.github.io/epg/guides/cg.xml",
-             "https://iptv-org.github.io/epg/guides/ro.xml",
-             "https://iptv-org.github.io/epg/guides/ru.xml",
-             "https://iptv-org.github.io/epg/guides/rw.xml",
-             "https://iptv-org.github.io/epg/guides/re.xml",
-             "https://iptv-org.github.io/epg/guides/bl.xml",
-             "https://iptv-org.github.io/epg/guides/sh.xml",
-             "https://iptv-org.github.io/epg/guides/kn.xml",
-             "https://iptv-org.github.io/epg/guides/lc.xml",
-             "https://iptv-org.github.io/epg/guides/mf.xml",
-             "https://iptv-org.github.io/epg/guides/pm.xml",
-             "https://iptv-org.github.io/epg/guides/vc.xml",
-             "https://iptv-org.github.io/epg/guides/ws.xml",
-             "https://iptv-org.github.io/epg/guides/sm.xml",
-             "https://iptv-org.github.io/epg/guides/sa.xml",
-             "https://iptv-org.github.io/epg/guides/sn.xml",
-             "https://iptv-org.github.io/epg/guides/rs.xml",
-             "https://iptv-org.github.io/epg/guides/sc.xml",
-             "https://iptv-org.github.io/epg/guides/sl.xml",
-             "https://iptv-org.github.io/epg/guides/sg.xml",
-             "https://iptv-org.github.io/epg/guides/sx.xml",
-             "https://iptv-org.github.io/epg/guides/sk.xml",
-             "https://iptv-org.github.io/epg/guides/si.xml",
-             "https://iptv-org.github.io/epg/guides/sb.xml",
-             "https://iptv-org.github.io/epg/guides/so.xml",
-             "https://iptv-org.github.io/epg/guides/za.xml",
-             "https://iptv-org.github.io/epg/guides/gs.xml",
-             "https://iptv-org.github.io/epg/guides/kr.xml",
-             "https://iptv-org.github.io/epg/guides/ss.xml",
-             "https://iptv-org.github.io/epg/guides/es.xml",
-             "https://iptv-org.github.io/epg/guides/lk.xml",
-             "https://iptv-org.github.io/epg/guides/sd.xml",
-             "https://iptv-org.github.io/epg/guides/sr.xml",
-             "https://iptv-org.github.io/epg/guides/sj.xml",
-             "https://iptv-org.github.io/epg/guides/sz.xml",
-             "https://iptv-org.github.io/epg/guides/se.xml",
-             "https://iptv-org.github.io/epg/guides/ch.xml",
-             "https://iptv-org.github.io/epg/guides/sy.xml",
-             "https://iptv-org.github.io/epg/guides/st.xml",
-             "https://iptv-org.github.io/epg/guides/tw.xml",
-             "https://iptv-org.github.io/epg/guides/tj.xml",
-             "https://iptv-org.github.io/epg/guides/tz.xml",
-             "https://iptv-org.github.io/epg/guides/th.xml",
-             "https://iptv-org.github.io/epg/guides/tg.xml",
-             "https://iptv-org.github.io/epg/guides/tk.xml",
-             "https://iptv-org.github.io/epg/guides/to.xml",
-             "https://iptv-org.github.io/epg/guides/tt.xml",
-             "https://iptv-org.github.io/epg/guides/tn.xml",
-             "https://iptv-org.github.io/epg/guides/tr.xml",
-             "https://iptv-org.github.io/epg/guides/tm.xml",
-             "https://iptv-org.github.io/epg/guides/tc.xml",
-             "https://iptv-org.github.io/epg/guides/tv.xml",
-             "https://iptv-org.github.io/epg/guides/um.xml",
-             "https://iptv-org.github.io/epg/guides/vi.xml",
-             "https://iptv-org.github.io/epg/guides/ug.xml",
-             "https://iptv-org.github.io/epg/guides/ua.xml",
-             "https://iptv-org.github.io/epg/guides/ae.xml",
-             "https://iptv-org.github.io/epg/guides/uk.xml",
-             "https://iptv-org.github.io/epg/guides/us.xml",
-             "https://iptv-org.github.io/epg/guides/uy.xml",
-             "https://iptv-org.github.io/epg/guides/uz.xml",
-             "https://iptv-org.github.io/epg/guides/vu.xml",
-             "https://iptv-org.github.io/epg/guides/va.xml",
-             "https://iptv-org.github.io/epg/guides/ve.xml",
-             "https://iptv-org.github.io/epg/guides/vn.xml",
-             "https://iptv-org.github.io/epg/guides/wf.xml",
-             "https://iptv-org.github.io/epg/guides/eh.xml",
-             "https://iptv-org.github.io/epg/guides/ye.xml",
-             "https://iptv-org.github.io/epg/guides/zm.xml",
-             "https://iptv-org.github.io/epg/guides/zw.xml",
-             "https://iptv-org.github.io/epg/guides/ax.xml",
-           )
+EPG_LIST = open('epglist.txt',"r") # for a clean code 
 
-class Channel():
-
+class Channel:
     def __init__(self, group, md_line):
         self.group = group
         md_line = md_line.strip()
-        try:
-            (before, number, name, url, logo, epg, after) = md_line.split("|")
-        except ValueError:
-            (before, number, name, url, logo, after) = md_line.split("|")
-            epg = None
-        self.number = number.strip()
-        self.name = name.strip()
-        self.url = url.strip()
+        parts = md_line.split("|")
+        self.number = parts[1].strip()
+        self.name = parts[2].strip()
+        self.url = parts[3].strip()
         self.url = self.url[self.url.find("(")+1:self.url.rfind(")")]
-        self.logo = logo.strip()
+        self.logo = parts[4].strip()
         self.logo = self.logo[self.logo.find('src="')+5:self.logo.rfind('"')]
-        self.epg = epg.strip() if epg else None
+        if len(parts) > 6:
+            self.epg = parts[5].strip()
+        else:
+            self.epg = None
 
     def to_m3u_line(self):
         if self.epg is None:
@@ -279,14 +27,23 @@ class Channel():
         else:
             return (f'#EXTINF:-1 tvg-name="{self.name}" tvg-logo="{self.logo}" tvg-id="{self.epg}" group-title="{self.group}",{self.name}\n{self.url}')
 
-if __name__ == "__main__":
+
+def main():
+    dir_playlists = 'playlists'
+    if not (os.path.isdir(dir_playlists)):
+        os.mkdir(dir_playlists)
     with open("playlist.m3u8", "w", encoding='utf-8') as playlist:
-        print(f'#EXTM3U x-tvg-url="{",".join(EPG_LIST)}"', file=playlist)
+        processed_epg_list = ", ".join(EPG_LIST).replace('\n', '')
+        head_playlist = f'#EXTM3U x-tvg-url="{processed_epg_list}"'
+        print(f'#EXTM3U x-tvg-url="{processed_epg_list}"', file=playlist)
         os.chdir("lists")
         for filename in sorted(os.listdir(".")):
             if filename == "README.md" or not filename.endswith(".md"):
                 continue
             with open(filename, encoding='utf-8') as markup_file:
+                file_country = os.path.join("..", dir_playlists, "playlist_" + filename[:-3:] + ".m3u8")
+                playlist_country = open(file_country, "w", encoding='utf-8')
+                playlist_country.write(head_playlist + "\n")
                 group = filename.replace(".md", "").title()
                 print(f"Generating {group}")
                 for line in markup_file:
@@ -296,3 +53,8 @@ if __name__ == "__main__":
                         continue
                     channel = Channel(group, line)
                     print(channel.to_m3u_line(), file=playlist)
+                    print(channel.to_m3u_line(), file=playlist_country)
+                playlist_country.close()
+
+if __name__ == "__main__":
+    main()
